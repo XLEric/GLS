@@ -414,8 +414,8 @@ void CCommTest::OnCommMscomm1()
 void CCommTest::OnBnClickedButtonClose()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	m_mscomm.put_PortOpen(FALSE);//关闭串口
-	AfxMessageBox(_T("串口1已关闭"));
+	//m_mscomm.put_PortOpen(FALSE);//关闭串口
+	//AfxMessageBox(_T("串口1已关闭"));
 }
 
 void CCommTest::OnBnClickedButtonSend()

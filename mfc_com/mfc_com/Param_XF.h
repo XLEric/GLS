@@ -11,7 +11,7 @@ using namespace std;
 #define PI 3.1415926
 
 float pos_x_Glob=0;
-float pos_y_Glob=0;
+float pos_y_Glob=-380;
 float pos_z_Glob=-240;
 
 int Yaw_angle_Offset=0;

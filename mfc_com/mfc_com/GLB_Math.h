@@ -1695,5 +1695,90 @@ void GLB_Fig_BuildOne_OneDOF(GL_Point FigNN,GL_Quater QtN,GL_Point Global_1,floa
 	glutSolidSphere(28, 20, 20);
 	glPopMatrix();//弹出上次保存的位置
 }
+/*******************************************************/
+void GLB_Add_Arm(
+	float q0,float q1,float q2,float q3,
+	float q50,float q51,float q52,float q53,
+	float pos_x,float pos_y,float pos_z,float &pos_xr,float &pos_yr,float &pos_zr)
+{
+	//------ 加后臂
 
+	GL_Quater Qt_ArmBack;
+Qt_ArmBack.q0=q50;
+Qt_ArmBack.q1=q51;
+Qt_ArmBack.q2=q52;
+Qt_ArmBack.q3=q53;
+
+GL_Quater Qt_ArmBack_N=Conjugate_Q(Qt_ArmBack); //------ 根节点四元数 求逆
+
+GL_Quater Q_Point;
+Q_Point.q0=0;
+Q_Point.q1=0;
+Q_Point.q2=0;
+Q_Point.q3=660;
+
+//四元数点局部坐标系更新计算 Loc_New_Point=Q*Loc_Old_Point*Q_N
+//------计算1次相乘
+GL_Quater Q011=MUL_Q(Qt_ArmBack,Q_Point);
+//------计算2次相乘
+GL_Quater Q022=MUL_Q(Q011,Qt_ArmBack_N);
+//坐标更新
+float pos_xr0=Q022.q1+pos_x;
+float pos_yr0=Q022.q2+pos_y;
+float pos_zr0=Q022.q3+pos_z;
+
+glLineWidth(10); 
+glBegin(GL_LINES);
+
+glColor3f (1.00, 0.75, 0.08);
+
+
+glVertex3f(pos_xr0,pos_yr0,pos_zr0);
+glVertex3f(pos_x,pos_y,pos_z); 
+
+glEnd();
+
+glPushMatrix();//储存当前视图矩阵
+glLineWidth(1); 
+glColor3f(1.0f, 0.0f, 1.0f); 
+glTranslatef(pos_xr0,pos_yr0,pos_zr0);
+glutWireSphere(66, 12, 12);
+glPopMatrix();//弹出上次保存的位置
+//------ 加前臂
+
+GL_Quater Qt_ArmFront;
+Qt_ArmFront.q0=q0;
+Qt_ArmFront.q1=q1;
+Qt_ArmFront.q2=q2;
+Qt_ArmFront.q3=q3;
+
+GL_Quater Qt_ArmFront_N=Conjugate_Q(Qt_ArmFront); //------ 根节点四元数 求逆
+
+
+Q_Point.q0=0;
+Q_Point.q1=0;
+Q_Point.q2=0;
+Q_Point.q3=660;
+
+//四元数点局部坐标系更新计算 Loc_New_Point=Q*Loc_Old_Point*Q_N
+//------计算1次相乘
+Q011=MUL_Q(Qt_ArmFront,Q_Point);
+//------计算2次相乘
+Q022=MUL_Q(Q011,Qt_ArmFront_N);
+//坐标更新
+ pos_xr=Q022.q1+pos_xr0;
+ pos_yr=Q022.q2+pos_yr0;
+ pos_zr=Q022.q3+pos_zr0;
+
+glLineWidth(10); 
+glBegin(GL_LINES);
+
+glColor3f (0.08, 0.28, 0.88);
+
+
+glVertex3f(pos_xr0,pos_yr0,pos_zr0);
+glVertex3f(pos_xr,pos_yr,pos_zr); 
+
+glEnd();
+}
 #endif

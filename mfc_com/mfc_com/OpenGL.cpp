@@ -609,7 +609,14 @@ void COpenGL::RenderGLScene(float Ww,float q0,float q1,float q2,float q3,
 	//GLfloat zz0=Mccx[2]*0 + Mccx[6]*0 - Mccx[10]*80+Mccx[14]*1;
 
 	//---------------------
-
+	float pos_xr;//掌心坐标
+	float pos_yr;
+	float pos_zr;
+	//增加手臂
+	GLB_Add_Arm(q0, q1, q2, q3,
+		 q50, q51, q52, q53,
+		 pos_x, pos_y, pos_z, pos_xr, pos_yr, pos_zr);
+	
 #if 0
 	
 	/***************************************/
@@ -691,7 +698,7 @@ void COpenGL::RenderGLScene(float Ww,float q0,float q1,float q2,float q3,
 	Qt0.q2=q2;
 	Qt0.q3=q3;
 
-	GLB_Hand_Build(GL_HandR,Qt0,Ww,pos_x,pos_y,pos_z);
+	GLB_Hand_Build(GL_HandR,Qt0,Ww,pos_xr,pos_yr,pos_zr);
 
 #if 0
 	GLB_FigS_Build(  q10, q11, q12, q13,
@@ -709,9 +716,39 @@ void COpenGL::RenderGLScene(float Ww,float q0,float q1,float q2,float q3,
 		 q30, q31, q32, q33,
 		 q40, q41, q42, q43,
 		 q50, q51, q52, q53,
-		 pos_x, pos_y, pos_z,
+		 pos_xr, pos_yr, pos_zr,
 		CDU_P,CDU_R,CDU_Y);
 #endif
+
+	glPopMatrix(); 
+	//绘制 旋转长方体
+	glPushMatrix();//储存当前视图矩阵
+	glTranslatef(pos_x,pos_y,pos_z);          // Move Left 1.5 Units And Into The Screen 6.0
+	glRotatef(Ww5,q51, q52, q53);
+	glColor3f(1.0f, 0.2f, 0.1f );
+	glScaled(28,3,40);
+	glutSolidCube(3);
+
+	glPopMatrix(); 
+
+	glPopMatrix(); 
+	//绘制 旋转长方体
+	glPushMatrix();//储存当前视图矩阵
+	glTranslatef(pos_x,pos_y,pos_z);          // Move Left 1.5 Units And Into The Screen 6.0
+	glRotatef(Ww5,q51, q52, q53);
+	glColor3f(0.0f, 0.2f, 0.9f );
+	glScaled(8,3,30);
+	glutSolidCube(3);
+
+	glPopMatrix(); 
+
+
+	glPushMatrix();//储存当前视图矩阵
+	glLineWidth(1); 
+	glColor3f(0.0f, 1.0f, 0.0f); 
+	glTranslatef(pos_x,pos_y,pos_z);
+	glutSolidSphere(52, 20, 20);
+	glPopMatrix();//弹出上次保存的位置
 	//--------------------------------------------------------------------
 	////绘制GL 激光线
 	//float pos_x2=pos_x+xx0*5;
